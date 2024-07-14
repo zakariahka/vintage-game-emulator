@@ -1,4 +1,4 @@
-#!/Users/zakariaalmardaee/csfolder/vintage-game-emulator/venv/bin/python
+#!/Users/zakariaalmardaee/csfolder/vintage-game-emulator/backend/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
