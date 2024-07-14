@@ -1,12 +1,16 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { NES } from 'jsnes';
 import { createAudioContext, createAudioScriptProcessor } from '../audio';
 
-const EmulatorComponent = ({ romData }) => {
+const EmulatorComponent = forwardRef(({ romData }, ref) => {
   const canvasRef = useRef(null);
   const audioContextRef = useRef(null);
   const audioScriptProcessorRef = useRef(null);
   const nesRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    getGameState: () => nesRef.current && nesRef.current.saveState(),
+  }));
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -57,6 +61,6 @@ const EmulatorComponent = ({ romData }) => {
   return (
     <canvas ref={canvasRef} width="256" height="240" style={{ width: '100%', height: 'auto' }} />
   );
-};
+});
 
 export default EmulatorComponent;

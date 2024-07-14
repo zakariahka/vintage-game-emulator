@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import EmulatorComponent from './EmulatorComponent';
 import { saveGame, loadGame } from '../services/api';
 
 const Emulator = () => {
   const [romData, setRomData] = useState(null);
+  const emulatorRef = useRef(null); // Define emulatorRef
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -38,7 +39,7 @@ const Emulator = () => {
     <div>
       <h1>Emulator</h1>
       <input type="file" accept=".nes" onChange={handleFileChange} />
-      {romData && <EmulatorComponent romData={romData} />}
+      {romData && <EmulatorComponent ref={emulatorRef} romData={romData} />}
       <button onClick={handleSaveGame}>Save Game</button>
       <button onClick={handleLoadGame}>Load Game</button>
     </div>
