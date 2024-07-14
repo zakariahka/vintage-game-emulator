@@ -1,28 +1,25 @@
 import React, { useState } from 'react';
-import { register } from '../services/api';
+import { Link } from 'react-router-dom';
+import { login } from '../services/api';
 
-const Register = () => {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await register(username, password);
+      const response = await login(username, password);
       console.log(response.data);
-      if (response.data.user) {
-        alert('Registration successful');
-        // Redirect to login page or dashboard
-      }
+      // Redirect to emulator page or show success message
     } catch (error) {
-      console.error('Registration failed', error);
-      alert('Registration failed');
+      console.error('Login failed', error);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-8">
-      <h1 className="text-3xl font-bold mb-4">Register</h1>
+      <h1 className="text-3xl font-bold mb-4">Login</h1>
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -51,12 +48,18 @@ const Register = () => {
             type="submit"
             className="bg-navy hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            Register
+            Login
           </button>
         </div>
       </form>
+      <p className="text-center text-gray-700">
+        Don't have an account?{' '}
+        <Link to="/register" className="text-navy font-bold">
+          Sign up here
+        </Link>
+      </p>
     </div>
   );
 };
 
-export default Register;
+export default Login;

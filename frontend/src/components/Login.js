@@ -11,9 +11,10 @@ const Login = () => {
     try {
       const response = await login(username, password);
       console.log(response.data);
-      // Redirect to emulator page or show success message
+      // Handle successful login, e.g., redirect to emulator page or show success message
     } catch (error) {
       console.error('Login failed', error);
+      // Handle login failure, e.g., show error message
     }
   };
 

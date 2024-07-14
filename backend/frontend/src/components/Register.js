@@ -10,13 +10,9 @@ const Register = () => {
     try {
       const response = await register(username, password);
       console.log(response.data);
-      if (response.data.user) {
-        alert('Registration successful');
-        // Redirect to login page or dashboard
-      }
+      // Redirect to login page or show success message
     } catch (error) {
       console.error('Registration failed', error);
-      alert('Registration failed');
     }
   };
 
