@@ -1,6 +1,0 @@
-Flask
-Flask-SQLAlchemy
-Flask-Login
-Flask-CORS
-Flask-Migrate
-python-dotenv
