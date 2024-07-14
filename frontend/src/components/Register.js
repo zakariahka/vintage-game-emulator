@@ -5,22 +5,25 @@ import { UserContext } from '../context/UserContext';
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { signup, isLoading } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(''); 
     const response = await signup({ username, password });
     if (response.status === 200) {
       navigate('/login');
     } else {
-      console.error('Signup failed:', response);
+      setError(response.message);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-8">
       <h1 className="text-3xl font-bold mb-4">Register</h1>
+      {error && <p className="text-red-500 text-xs italic">{error}</p>}
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
