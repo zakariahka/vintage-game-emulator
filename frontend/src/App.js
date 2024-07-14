@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Home from './components/Home';
 import Leaderboard from './components/Leaderboard';
 import { UserProvider, UserContext } from './context/UserContext';
+import PublicRoute from './components/PublicRoute';
 
 const ProtectedRoute = ({ children }) => {
   const { userToken } = useContext(UserContext);
@@ -16,8 +17,22 @@ const App = () => {
     <UserProvider>
       <Router>
         <Routes>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route 
+            path="/register" 
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            } 
+          />
+          <Route 
+            path="/login" 
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            } 
+          />
           <Route
             path="/home"
             element={

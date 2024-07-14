@@ -43,3 +43,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [jsnes](https://github.com/bfirsh/jsnes) for the NES emulator.
 - [React](https://reactjs.org/) for building the user interface.
 - [Flask](https://flask.palletsprojects.com/) for the backend framework.
+- [MongoDB](https://www.mongodb.com/) for the database solution.
