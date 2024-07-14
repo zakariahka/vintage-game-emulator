@@ -7,33 +7,27 @@ auth_bp = Blueprint('auth', __name__)
 game_bp = Blueprint('game', __name__)
 test_bp = Blueprint('test', __name__)
 
-@test_bp.route('/test_mongo_connection')
-def test_mongo_connection():
-    try:
-        mongo.db.command('ping')
-        return jsonify({"message": "Connected successfully to MongoDB!"}), 200
-    except Exception as e:
-        return jsonify({"message": f"An error occurred: {e}"}), 500
-
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
-    print(f"Received data: {data}") 
+    print(f"Received data: {data}")
     if User.find_by_username(data['username']):
-        print("User already exists")  
+        print("User already exists") 
         return jsonify({"message": "User already exists"}), 400
     user = User.create(data['username'], data['password'])
-    print(f"User created: {user.username}")  
+    print(f"User created: {user.username}") 
     return jsonify({"message": "User registered successfully", "user": {"id": user.id, "username": user.username}})
-
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
+    print(f"Received data: {data}")
     user = User.find_by_username(data['username'])
     if user and user.password == data['password']:
         login_user(user)
+        print(f"User logged in: {user.username}")
         return jsonify({"message": "Login successful", "user": {"id": user.id, "username": user.username}})
+    print("Invalid credentials")  
     return jsonify({"message": "Invalid credentials"}), 401
 
 @auth_bp.route('/logout', methods=['POST'])
@@ -62,3 +56,11 @@ def leaderboard():
     high_scores = HighScore.get_all()
     leaderboard = [{"username": User.get(score['user_id']).username, "game": score['game'], "score": score['score']} for score in high_scores]
     return jsonify({"leaderboard": leaderboard})
+
+@test_bp.route('/test_mongo_connection')
+def test_mongo_connection():
+    try:
+        mongo.db.command('ping')
+        return jsonify({"message": "Connected successfully to MongoDB!"}), 200
+    except Exception as e:
+        return jsonify({"message": f"An error occurred: {e}"}), 500

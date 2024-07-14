@@ -9,10 +9,11 @@ const Register = () => {
     event.preventDefault();
     try {
       const response = await register(username, password);
-      console.log(response.data);
+      console.log('Backend response:', response);
       if (response.data.user) {
         alert('Registration successful');
-        // Redirect to login page or dashboard
+      } else {
+        alert('Registration failed: ' + response.data.message); 
       }
     } catch (error) {
       console.error('Registration failed', error);

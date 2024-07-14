@@ -9,7 +9,7 @@ login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True) 
     app.config.from_object(Config)
     app.config.from_pyfile('config.py', silent=True)
 
