@@ -1,17 +1,31 @@
 from flask import Blueprint, request, jsonify
 from .models import User, GameState, HighScore
 from flask_login import login_user, logout_user, login_required, current_user
+from . import mongo
 
 auth_bp = Blueprint('auth', __name__)
 game_bp = Blueprint('game', __name__)
+test_bp = Blueprint('test', __name__)
+
+@test_bp.route('/test_mongo_connection')
+def test_mongo_connection():
+    try:
+        mongo.db.command('ping')
+        return jsonify({"message": "Connected successfully to MongoDB!"}), 200
+    except Exception as e:
+        return jsonify({"message": f"An error occurred: {e}"}), 500
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
+    print(f"Received data: {data}") 
     if User.find_by_username(data['username']):
+        print("User already exists")  
         return jsonify({"message": "User already exists"}), 400
-    User.create(data['username'], data['password'])
-    return jsonify({"message": "User registered successfully"})
+    user = User.create(data['username'], data['password'])
+    print(f"User created: {user.username}")  
+    return jsonify({"message": "User registered successfully", "user": {"id": user.id, "username": user.username}})
+
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -19,7 +33,7 @@ def login():
     user = User.find_by_username(data['username'])
     if user and user.password == data['password']:
         login_user(user)
-        return jsonify({"message": "Login successful"})
+        return jsonify({"message": "Login successful", "user": {"id": user.id, "username": user.username}})
     return jsonify({"message": "Invalid credentials"}), 401
 
 @auth_bp.route('/logout', methods=['POST'])
