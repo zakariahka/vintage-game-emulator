@@ -19,49 +19,49 @@ export const UserProvider = ({ children }) => {
 
   const signup = async (userData) => {
     const url = 'http://127.0.0.1:5000/register';
-    try {
-      const response = await axios.post(url, userData, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      if (response.status === 200) {
-        setUser(response.data.user);
-        setUserToken(response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        localStorage.setItem('userToken', response.data.token);
+    
+    const response = await axios.post(url, userData, {
+      headers: {
+        'Content-Type': 'application/json'
       }
-      return response;
-    } catch (error) {
-      console.error('Signup Error:', error.response ? error.response.data : error.message);
-      return { message: error.response ? error.response.data.message : error.message };
+    });
+  
+    if (response.status !== 200) {
+      return { message: response.data.message };
     }
+  
+    setUser(response.data.user);
+    setUserToken(response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    localStorage.setItem('userToken', response.data.token);
+    
+    return response;
   };
+  
 
   const login = async (username, password) => {
     const url = 'http://127.0.0.1:5000/login';
     setIsLoading(true);
-    try {
-      const response = await axios.post(url, { username, password }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      if (response.status !== 200) {
-        throw new Error(response.data.message);
+    
+    const response = await axios.post(url, { username, password }, {
+      headers: {
+        'Content-Type': 'application/json'
       }
-      setUser(response.data.user);
-      setUserToken(response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      localStorage.setItem('userToken', response.data.token);
-      return response;
-    } catch (error) {
-      console.error('Login Error:', error.response ? error.response.data : error.message);
-      return { message: error.response ? error.response.data.message : error.message };
-    } finally {
-      setIsLoading(false);
+    });
+
+    setIsLoading(false);
+
+    if (response.status !== 200) {
+      return { message: response.data.message };
     }
+  
+    setUser(response.data.user);
+    setUserToken(response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    localStorage.setItem('userToken', response.data.token);
+    return response;
   };
+  
 
   const logout = () => {
     setUser(null);

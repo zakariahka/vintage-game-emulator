@@ -11,12 +11,12 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(''); // Clear previous errors
+    setError('');
     const response = await login(username, password);
-    if (response.status === 200) {
-      navigate('/home');
+    if (response.message) {
+      setError(response.message);
     } else {
-      setError(response.message); // Display the error message from the backend
+      navigate('/home');
     }
   };
 

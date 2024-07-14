@@ -11,12 +11,12 @@ const Register = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(''); 
+    setError('');
     const response = await signup({ username, password });
-    if (response.status === 200) {
-      navigate('/login');
-    } else {
+    if (response.message) {
       setError(response.message);
+    } else {
+      navigate('/login');
     }
   };
 
