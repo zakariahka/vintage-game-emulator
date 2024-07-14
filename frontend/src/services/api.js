@@ -10,6 +10,6 @@ export const login = (username, password) => api.post('/login', { username, pass
 export const logout = () => api.post('/logout');
 export const saveGame = (gameState) => api.post('/save_game', { gameState });
 export const loadGame = () => api.get('/load_game');
-export const getLeaderboard = () => api.get('/leaderboard');
+export const getLeaderboard = () => api.get('/leaderboard');export const getUser = () => api.get('/user');
 
 export default api;

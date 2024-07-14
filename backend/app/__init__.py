@@ -15,6 +15,7 @@ def create_app():
 
     mongo.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = 'auth.login' 
 
     from .routes import auth_bp, game_bp, test_bp
     app.register_blueprint(auth_bp)

@@ -1,25 +1,54 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import Home from './components/Home';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Register from './components/Register';
 import Login from './components/Login';
-import Emulator from './components/Emulator';
+import Home from './components/Home';
 import Leaderboard from './components/Leaderboard';
+import { getUser } from './services/api';
 
-function App() {
+const App = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const response = await getUser();
+        setUser(response.data.user);
+      } catch (error) {
+        console.log('No user logged in');
+      }
+    }
+    fetchUser();
+  }, []);
+
+  const ProtectedRoute = ({ children }) => {
+    return user ? children : <Navigate to="/login" />;
+  };
+
   return (
-    <div className="min-h-screen bg-beige text-navy">
-      <div className="container mx-auto p-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/emulator" element={<Emulator />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-        </Routes>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/leaderboard"
+          element={
+            <ProtectedRoute>
+              <Leaderboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

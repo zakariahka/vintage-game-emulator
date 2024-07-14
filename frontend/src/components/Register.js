@@ -5,15 +5,14 @@ import { register } from '../services/api';
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Get the navigate function from react-router-dom
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await register(username, password);
       console.log(response.data);
-      // If registration is successful, navigate to the home screen
-      navigate('/home'); // Adjust the path according to your routing setup
+      navigate('/home'); 
     } catch (error) {
       console.error('Registration failed', error);
     }

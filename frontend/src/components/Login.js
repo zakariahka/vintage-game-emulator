@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../services/api';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await login(username, password);
       console.log(response.data);
-      // Redirect to emulator page or show success message
+      if (response.data.user) {
+        navigate('/home');
+      }
     } catch (error) {
       console.error('Login failed', error);
     }
@@ -63,3 +66,4 @@ const Login = () => {
 };
 
 export default Login;
+

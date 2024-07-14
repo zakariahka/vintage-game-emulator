@@ -1,6 +1,6 @@
-from . import mongo
 from flask_login import UserMixin
 from bson.objectid import ObjectId
+from . import mongo, login_manager
 
 class User(UserMixin):
     def __init__(self, username, password, _id=None):
@@ -26,6 +26,10 @@ class User(UserMixin):
         if user_data:
             return User(user_data['username'], user_data['password'], user_data['_id'])
         return None
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 class GameState:
     @staticmethod
