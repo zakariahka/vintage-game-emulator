@@ -4,6 +4,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Home from './components/Home';
 import Leaderboard from './components/Leaderboard';
+import Emulator from './components/Emulator';
 import { UserProvider, UserContext } from './context/UserContext';
 import PublicRoute from './components/PublicRoute';
 
@@ -46,6 +47,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Leaderboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/emulator"
+            element={
+              <ProtectedRoute>
+                <Emulator />
               </ProtectedRoute>
             }
           />

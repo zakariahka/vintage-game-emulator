@@ -4,17 +4,28 @@ import axios from 'axios';
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : null);
-  const [userToken, setUserToken] = useState(sessionStorage.getItem('userToken') || null);
+  const [user, setUser] = useState(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
+  const [userToken, setUserToken] = useState(localStorage.getItem('userToken') || null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const storedUser = sessionStorage.getItem('user');
-    const storedToken = sessionStorage.getItem('userToken');
+    const handleUnload = () => {
+      localStorage.removeItem('user');
+      localStorage.removeItem('userToken');
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('userToken');
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
       setUserToken(storedToken);
     }
+
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+    };
   }, []);
 
   const signup = async (userData) => {
@@ -31,8 +42,8 @@ export const UserProvider = ({ children }) => {
 
     setUser(response.data.user);
     setUserToken(response.data.token);
-    sessionStorage.setItem('user', JSON.stringify(response.data.user));
-    sessionStorage.setItem('userToken', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    localStorage.setItem('userToken', response.data.token);
     
     return response;
   };
@@ -55,8 +66,8 @@ export const UserProvider = ({ children }) => {
 
     setUser(response.data.user);
     setUserToken(response.data.token);
-    sessionStorage.setItem('user', JSON.stringify(response.data.user));
-    sessionStorage.setItem('userToken', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    localStorage.setItem('userToken', response.data.token);
 
     return response;
   };
@@ -64,8 +75,8 @@ export const UserProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setUserToken(null);
-    sessionStorage.removeItem('user');
-    sessionStorage.removeItem('userToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('userToken');
   };
 
   return (

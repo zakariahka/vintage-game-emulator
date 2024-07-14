@@ -42,25 +42,19 @@ def logout():
 @game_bp.route('/save_game', methods=['POST'])
 @jwt_required()
 def save_game():
-    try:
-        data = request.get_json()
-        current_user_id = get_jwt_identity()['id']
-        GameState.save(current_user_id, data['game_state'])
-        return jsonify({"message": "Game state saved successfully"}), 200
-    except Exception as e:
-        return jsonify({"message": f"An error occurred: {e}"}), 500
+    data = request.get_json()
+    user_id = get_jwt_identity()['id']
+    GameState.save(user_id, data['game_state'])
+    return jsonify({"message": "Game state saved successfully"})
 
 @game_bp.route('/load_game', methods=['GET'])
 @jwt_required()
 def load_game():
-    try:
-        current_user_id = get_jwt_identity()['id']
-        game_state = GameState.load(current_user_id)
-        if game_state:
-            return jsonify({"game_state": game_state['game_state']}), 200
-        return jsonify({"message": "No saved game state found"}), 404
-    except Exception as e:
-        return jsonify({"message": f"An error occurred: {e}"}), 500
+    user_id = get_jwt_identity()['id']
+    game_state = GameState.load(user_id)
+    if game_state:
+        return jsonify({"game_state": game_state['game_state']})
+    return jsonify({"message": "No saved game state found"}), 404
 
 @game_bp.route('/leaderboard', methods=['GET'])
 def leaderboard():
