@@ -2,13 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => (
-  <nav>
-    <ul>
-      <li><Link to="/">Home</Link></li>
-      <li><Link to="/register">Register</Link></li>
-      <li><Link to="/login">Login</Link></li>
-      <li><Link to="/emulator">Emulator</Link></li>
-      <li><Link to="/leaderboard">Leaderboard</Link></li>
+  <nav className="bg-navy p-4">
+    <ul className="flex justify-around">
+      <li><Link className="text-beige" to="/">Home</Link></li>
+      <li><Link className="text-beige" to="/register">Register</Link></li>
+      <li><Link className="text-beige" to="/login">Login</Link></li>
+      <li><Link className="text-beige" to="/emulator">Emulator</Link></li>
+      <li><Link className="text-beige" to="/leaderboard">Leaderboard</Link></li>
     </ul>
   </nav>
 );
