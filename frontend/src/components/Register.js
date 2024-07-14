@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../services/api';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // Get the navigate function from react-router-dom
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await register(username, password);
       console.log(response.data);
-      // Redirect to login page or show success message
+      // If registration is successful, navigate to the home screen
+      navigate('/home'); // Adjust the path according to your routing setup
     } catch (error) {
       console.error('Registration failed', error);
     }
@@ -51,6 +54,12 @@ const Register = () => {
           </button>
         </div>
       </form>
+      <p className="text-center text-gray-700">
+        Already have an account?{' '}
+        <Link to="/login" className="text-navy font-bold">
+          Login here
+        </Link>
+      </p>
     </div>
   );
 };
