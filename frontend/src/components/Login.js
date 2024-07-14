@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { login } from '../services/api';
 
 const Login = () => {
@@ -51,6 +52,12 @@ const Login = () => {
           </button>
         </div>
       </form>
+      <p className="text-center text-gray-700">
+        Don't have an account?{' '}
+        <Link to="/register" className="text-navy font-bold">
+          Sign up here
+        </Link>
+      </p>
     </div>
   );
 };

@@ -5,12 +5,10 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Emulator from './components/Emulator';
 import Leaderboard from './components/Leaderboard';
-import Navbar from './components/Navbar';
 
 function App() {
   return (
     <div className="min-h-screen bg-beige text-navy">
-      <Navbar />
       <div className="container mx-auto p-4">
         <Routes>
           <Route path="/" element={<Home />} />
