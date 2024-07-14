@@ -1,22 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { login } from '../services/api';
+import { UserContext } from '../context/UserContext';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { login, isLoading } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await login(username, password);
-      console.log(response.data);
-      if (response.data.user) {
-        navigate('/home');
-      }
-    } catch (error) {
-      console.error('Login failed', error);
+    const response = await login(username, password);
+    if (response.status === 200) {
+      navigate('/home');
+    } else {
+      console.error('Login failed:', response);
     }
   };
 
@@ -25,9 +23,7 @@ const Login = () => {
       <h1 className="text-3xl font-bold mb-4">Login</h1>
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Username
-          </label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
           <input
             type="text"
             value={username}
@@ -36,9 +32,7 @@ const Login = () => {
           />
         </div>
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Password
-          </label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
           <input
             type="password"
             value={password}
@@ -47,23 +41,16 @@ const Login = () => {
           />
         </div>
         <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="bg-navy hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Login
+          <button type="submit" className="bg-navy hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </div>
       </form>
       <p className="text-center text-gray-700">
-        Don't have an account?{' '}
-        <Link to="/register" className="text-navy font-bold">
-          Sign up here
-        </Link>
+        Don't have an account? <Link to="/register" className="text-navy font-bold">Sign up here</Link>
       </p>
     </div>
   );
 };
 
 export default Login;
-

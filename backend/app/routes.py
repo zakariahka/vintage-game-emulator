@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from .models import User, GameState, HighScore
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from . import mongo
 
 auth_bp = Blueprint('auth', __name__)
@@ -13,7 +14,8 @@ def register():
     if User.find_by_username(data['username']):
         return jsonify({"message": "User already exists"}), 400
     user = User.create(data['username'], data['password'])
-    return jsonify({"message": "User registered successfully", "user": {"id": user.id, "username": user.username}})
+    access_token = create_access_token(identity={'id': user.id, 'username': user.username})
+    return jsonify({"message": "User registered successfully", "user": {"id": user.id, "username": user.username}, "token": access_token})
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -21,7 +23,8 @@ def login():
     user = User.find_by_username(data['username'])
     if user and user.password == data['password']:
         login_user(user)
-        return jsonify({"message": "Login successful", "user": {"id": user.id, "username": user.username}})
+        access_token = create_access_token(identity={'id': user.id, 'username': user.username})
+        return jsonify({"message": "Login successful", "user": {"id": user.id, "username": user.username}, "token": access_token})
     return jsonify({"message": "Invalid credentials"}), 401
 
 @auth_bp.route('/logout', methods=['POST'])
@@ -31,16 +34,18 @@ def logout():
     return jsonify({"message": "Logout successful"})
 
 @game_bp.route('/save_game', methods=['POST'])
-@login_required
+@jwt_required()
 def save_game():
     data = request.get_json()
-    GameState.save(current_user.id, data['game_state'])
+    current_user_id = get_jwt_identity()['id']
+    GameState.save(current_user_id, data['game_state'])
     return jsonify({"message": "Game state saved successfully"})
 
 @game_bp.route('/load_game', methods=['GET'])
-@login_required
+@jwt_required()
 def load_game():
-    game_state = GameState.load(current_user.id)
+    current_user_id = get_jwt_identity()['id']
+    game_state = GameState.load(current_user_id)
     if game_state:
         return jsonify({"game_state": game_state['game_state']})
     return jsonify({"message": "No saved game state found"}), 404

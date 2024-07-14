@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { register } from '../services/api';
+import { UserContext } from '../context/UserContext';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { signup, isLoading } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await register(username, password);
-      console.log(response.data);
-      navigate('/home'); 
-    } catch (error) {
-      console.error('Registration failed', error);
+    const response = await signup({ username, password });
+    if (response.status === 200) {
+      navigate('/login');
+    } else {
+      console.error('Signup failed:', response);
     }
   };
 
@@ -23,9 +23,7 @@ const Register = () => {
       <h1 className="text-3xl font-bold mb-4">Register</h1>
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Username
-          </label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
           <input
             type="text"
             value={username}
@@ -34,9 +32,7 @@ const Register = () => {
           />
         </div>
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Password
-          </label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
           <input
             type="password"
             value={password}
@@ -45,19 +41,13 @@ const Register = () => {
           />
         </div>
         <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="bg-navy hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Register
+          <button type="submit" className="bg-navy hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            {isLoading ? 'Signing up...' : 'Sign up'}
           </button>
         </div>
       </form>
       <p className="text-center text-gray-700">
-        Already have an account?{' '}
-        <Link to="/login" className="text-navy font-bold">
-          Login here
-        </Link>
+        Already have an account? <Link to="/login" className="text-navy font-bold">Login here</Link>
       </p>
     </div>
   );
