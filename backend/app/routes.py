@@ -12,11 +12,11 @@ test_bp = Blueprint('test', __name__)
 def register():
     data = request.get_json()
     if not data.get('username') or not data.get('password'):
-        return jsonify({"message": "Username and password are required"}), 400
+        return jsonify({"message": "Username and password are required"}), 401
     if len(data['password']) < 8:
-        return jsonify({"message": "Password must be at least 8 characters long"}), 400
+        return jsonify({"message": "Password must be at least 8 characters long"}), 402
     if User.find_by_username(data['username']):
-        return jsonify({"message": "User already exists"}), 400
+        return jsonify({"message": "User already exists"}), 403
     user = User.create(data['username'], data['password'])
     access_token = create_access_token(identity={'id': user.id, 'username': user.username})
     return jsonify({"message": "User registered successfully", "user": {"id": user.id, "username": user.username}, "token": access_token}), 200

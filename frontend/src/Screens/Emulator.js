@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import EmulatorComponent from './EmulatorComponent';
+import EmulatorComponent from '../components/EmulatorComponent';
 import { saveGame, loadGame } from '../services/api';
 
 const Emulator = () => {

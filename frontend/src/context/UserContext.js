@@ -7,29 +7,19 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null);
   const [userToken, setUserToken] = useState(localStorage.getItem('userToken') || null);
   const [isLoading, setIsLoading] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    const handleUnload = () => {
-      localStorage.removeItem('user');
-      localStorage.removeItem('userToken');
-    };
-
-    window.addEventListener('beforeunload', handleUnload);
-
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('userToken');
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
       setUserToken(storedToken);
     }
-
-    return () => {
-      window.removeEventListener('beforeunload', handleUnload);
-    };
   }, []);
 
   const signup = async (userData) => {
-    const url = 'http://127.0.0.1:5000/register';
+    const url = `${API_URL}/register`;
     const response = await axios.post(url, userData, {
       headers: {
         'Content-Type': 'application/json'
@@ -37,7 +27,7 @@ export const UserProvider = ({ children }) => {
     });
 
     if (response.status !== 200) {
-      return { message: response.data.message };
+      return { status: response.status, message: response.data.message };
     }
 
     setUser(response.data.user);
@@ -49,7 +39,7 @@ export const UserProvider = ({ children }) => {
   };
 
   const login = async (username, password) => {
-    const url = 'http://127.0.0.1:5000/login';
+    const url = `${API_URL}/login`;
     setIsLoading(true);
 
     const response = await axios.post(url, { username, password }, {

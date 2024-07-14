@@ -1,17 +1,13 @@
-import React, { useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Register from './components/Register';
-import Login from './components/Login';
-import Home from './components/Home';
-import Leaderboard from './components/Leaderboard';
-import Emulator from './components/Emulator';
-import { UserProvider, UserContext } from './context/UserContext';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Register from './Screens/Register';
+import Login from './Screens/Login';
+import Home from './Screens/Home';
+import Leaderboard from './Screens/Leaderboard';
+import Emulator from './Screens/Emulator';
+import { UserProvider } from './context/UserContext';
 import PublicRoute from './components/PublicRoute';
-
-const ProtectedRoute = ({ children }) => {
-  const { userToken } = useContext(UserContext);
-  return userToken ? children : <Navigate to="/login" />;
-};
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   return (
