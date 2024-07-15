@@ -1,3 +1,5 @@
+## The app is still in development !!
+Hopefully will be finished soon :)
 
 # Retro Game Console Emulator
 
