@@ -1,11 +1,8 @@
 import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { NES } from 'jsnes';
-import { createAudioContext, createAudioScriptProcessor } from '../audio';
 
 const EmulatorComponent = forwardRef(({ romData }, ref) => {
   const canvasRef = useRef(null);
-  const audioContextRef = useRef(null);
-  const audioScriptProcessorRef = useRef(null);
   const nesRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
@@ -14,7 +11,7 @@ const EmulatorComponent = forwardRef(({ romData }, ref) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d', { willReadFrequently: true });
 
     const nes = new NES({
       onFrame: (frameBuffer) => {
@@ -27,20 +24,7 @@ const EmulatorComponent = forwardRef(({ romData }, ref) => {
         }
         context.putImageData(imageData, 0, 0);
       },
-      onAudioSample: (left, right) => {
-        const scriptProcessor = audioScriptProcessorRef.current;
-        if (scriptProcessor) {
-          scriptProcessor.bufferLeft.push(left);
-          scriptProcessor.bufferRight.push(right);
-        }
-      },
     });
-
-    const audioContext = createAudioContext();
-    const scriptProcessor = createAudioScriptProcessor(audioContext);
-    scriptProcessor.connect(audioContext.destination);
-    audioContextRef.current = audioContext;
-    audioScriptProcessorRef.current = scriptProcessor;
 
     nes.loadROM(romData);
     nesRef.current = nes;
@@ -51,10 +35,76 @@ const EmulatorComponent = forwardRef(({ romData }, ref) => {
     };
     runEmulator();
 
-    return () => {
-      if (audioContext) {
-        audioContext.close();
+    const handleKeyDown = (event) => {
+      const { Controller } = NES;
+      switch (event.key) {
+        case 'ArrowUp':
+          nes.buttonDown(1, Controller.BUTTON_UP);
+          break;
+        case 'ArrowDown':
+          nes.buttonDown(1, Controller.BUTTON_DOWN);
+          break;
+        case 'ArrowLeft':
+          nes.buttonDown(1, Controller.BUTTON_LEFT);
+          break;
+        case 'ArrowRight':
+          nes.buttonDown(1, Controller.BUTTON_RIGHT);
+          break;
+        case 'z':
+          nes.buttonDown(1, Controller.BUTTON_A);
+          break;
+        case 'x':
+          nes.buttonDown(1, Controller.BUTTON_B);
+          break;
+        case 'Enter':
+          nes.buttonDown(1, Controller.BUTTON_START);
+          break;
+        case 'Shift':
+          nes.buttonDown(1, Controller.BUTTON_SELECT);
+          break;
+        default:
+          break;
       }
+    };
+
+    const handleKeyUp = (event) => {
+      const { Controller } = NES;
+      switch (event.key) {
+        case 'ArrowUp':
+          nes.buttonUp(1, Controller.BUTTON_UP);
+          break;
+        case 'ArrowDown':
+          nes.buttonUp(1, Controller.BUTTON_DOWN);
+          break;
+        case 'ArrowLeft':
+          nes.buttonUp(1, Controller.BUTTON_LEFT);
+          break;
+        case 'ArrowRight':
+          nes.buttonUp(1, Controller.BUTTON_RIGHT);
+          break;
+        case 'z':
+          nes.buttonUp(1, Controller.BUTTON_A);
+          break;
+        case 'x':
+          nes.buttonUp(1, Controller.BUTTON_B);
+          break;
+        case 'Enter':
+          nes.buttonUp(1, Controller.BUTTON_START);
+          break;
+        case 'Shift':
+          nes.buttonUp(1, Controller.BUTTON_SELECT);
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, [romData]);
 

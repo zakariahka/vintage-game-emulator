@@ -19,10 +19,12 @@ const Leaderboard = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-8">
-      <h1 className="text-3xl font-bold mb-4">Leaderboard</h1>
+      <h1 className="text-3xl font-bold text-brown-red mb-4">Leaderboard</h1>
       <ul className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         {leaderboard.map((entry, index) => (
-          <li key={index} className="border-b border-gray-200 py-2">{entry.username}: {entry.score}</li>
+          <li key={index} className="border-b border-gray-200 py-2 text-navy">
+            {index + 1}. {entry.username}: {entry.score}
+          </li>
         ))}
       </ul>
     </div>

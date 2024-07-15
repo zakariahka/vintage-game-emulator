@@ -6,7 +6,7 @@ module.exports = {
       colors: {
         navy: '#003f5c',
         beige: '#f5f5dc',
-        brownRed: '#8b0000',
+        brownRed: '#8b0000'
       },
       fontFamily: {
         arcade: ['"Press Start 2P"', 'cursive'],
