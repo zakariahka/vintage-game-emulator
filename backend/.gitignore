@@ -6,7 +6,7 @@ node_modules/
 
 # Ignore log files
 *.log
-
+ 
 # Ignore Python compiled files
 __pycache__/
 *.pyc
